@@ -4,15 +4,11 @@ public abstract class Chessman {
     private final String name;
     private final String symbol;
     private final boolean isWhite;
-    private Position position;
 
-    public abstract boolean canMove(Position newPosition);
-
-    public Chessman(String name, String symbol, boolean isWhite, Position position) {
+    public Chessman(String name, String symbol, boolean isWhite) {
         this.name = name;
         this.symbol = symbol;
         this.isWhite = isWhite;
-        this.position = position;
     }
 
     public String getName() {
@@ -26,13 +22,4 @@ public abstract class Chessman {
     public boolean isWhite() {
         return isWhite;
     }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
 }

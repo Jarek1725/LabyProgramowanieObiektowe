@@ -1,15 +1,12 @@
 package org.example;
 
-import org.example.Models.Pawn;
-import org.example.Models.Position;
+import org.example.Models.Board;
 
-import java.awt.*;
-import java.io.Console;
+import java.util.Collections;
 
 public class Main {
-    public static void main(String[] args) {
-        Pawn pawn = new Pawn(true);
-        Position position = new Position(1, 1, pawn);
-        System.out.println(position.chessman().getSymbol());
+    public static void main(String[] args)  {
+        Board board = new Board();
+        board.startGame();
     }
 }

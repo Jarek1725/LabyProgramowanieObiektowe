@@ -2,18 +2,18 @@ package org.example.Models;
 
 import java.util.List;
 
-public class Pawn extends Chessman {
-    public Pawn(boolean isWhite) {
-        super("Pawn", isWhite ? "\u265F" : "\u2659", isWhite);
+public class Rook extends Chessman {
+    public Rook(boolean isWhite) {
+        super("Rook", isWhite ? "\u265C" : "\u2656", isWhite);
     }
 
     @Override
     public boolean canMove(Position from, Position to) {
-        return true;
+        return false;
     }
 
     @Override
     public List<String> getAvailableMoves(Position from) {
-        return List.of("A6", "A5");
+        return null;
     }
 }

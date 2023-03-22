@@ -13,7 +13,8 @@ public class Rook extends Chessman {
     }
 
     @Override
-    public List<String> getAvailableMoves(Position from) {
+    public List<String> getAvailableMoves(Position from, Board board) {
         return null;
     }
+
 }

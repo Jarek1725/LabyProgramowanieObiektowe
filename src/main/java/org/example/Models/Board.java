@@ -28,8 +28,51 @@ public class Board {
         }
     }
 
+    public boolean isChessmanBetweenPositions(Position from, Position to) {
+        int x1 = from.getX();
+        int y1 = from.getY();
+        int x2 = to.getX();
+        int y2 = to.getY();
+
+        if (x1 == x2) {
+            int yMin = Math.min(y1, y2);
+            int yMax = Math.max(y1, y2);
+            for (int i = yMin + 1; i < yMax; i++) {
+                if (positions[x1][i].getChessman() != null) {
+                    return true;
+                }
+            }
+        }
+        if (y1 == y2) {
+            int xMin = Math.min(x1, x2);
+            int xMax = Math.max(x1, x2);
+            for (int i = xMin + 1; i < xMax; i++) {
+                if (positions[i][y1].getChessman() != null) {
+                    return true;
+                }
+            }
+        }
+        if (Math.abs(x1 - x2) == Math.abs(y1 - y2)) {
+            int xMin = Math.min(x1, x2);
+            int xMax = Math.max(x1, x2);
+            int yMin = Math.min(y1, y2);
+            int yMax = Math.max(y1, y2);
+            int x = xMin + 1;
+            int y = yMin + 1;
+            while (x < xMax - 1 && y < yMax - 1) {
+                if (positions[x][y].getChessman() != null) {
+                    return true;
+                }
+                x++;
+                y++;
+            }
+        }
+
+        return false;
+    }
+
     private void operationsOnSelectedChessman(Position positionStart) {
-        List<String> availableMoves = positionStart.getChessman().getAvailableMoves(positionStart);
+        List<String> availableMoves = positionStart.getChessman().getAvailableMoves(positionStart, this);
         if (availableMoves.isEmpty()) {
             drawBoard(List.of("No available moves"));
         } else {
@@ -63,7 +106,7 @@ public class Board {
     }
 
     private List<String> getAvailableMoves(Position positionStart) {
-        return positionStart.getChessman().getAvailableMoves(positionStart);
+        return positionStart.getChessman().getAvailableMoves(positionStart, this);
     }
 
     public Position getChessmanAtPosition(String position) {
@@ -91,13 +134,13 @@ public class Board {
             }
         }
 
-        positions[0][4] = new Position(0, 4, new King(true));
-        positions[7][3] = new Position(0, 4, new King(false));
+        positions[0][4 ] = new Position(0, 4, new King(true));
+        positions[7][3] = new Position(7, 3, new King(false));
 
         positions[0][0] = new Position(0, 0, new Rook(true));
-        positions[0][7] = new Position(0, 0, new Rook(true));
-        positions[7][0] = new Position(0, 0, new Rook(false));
-        positions[7][7] = new Position(0, 0, new Rook(false));
+        positions[0][7] = new Position(0, 7, new Rook(true));
+        positions[7][0] = new Position(7, 0, new Rook(false));
+        positions[7][7] = new Position(7, 7, new Rook(false));
     }
 
     public void drawBoard(List<String> additionalInformation) {
@@ -128,7 +171,7 @@ public class Board {
         return isEnd;
     }
 
-    public void setEnd(boolean end) {
-        isEnd = end;
+    public Position[][] getPositions() {
+        return positions;
     }
 }

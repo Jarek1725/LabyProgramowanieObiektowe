@@ -9,7 +9,7 @@ public abstract class Chessman {
 
     public abstract boolean canMove(Position from, Position to);
 
-    public abstract List<String> getAvailableMoves(Position from);
+    public abstract List<String> getAvailableMoves(Position from, Board board);
 
     public Chessman(String name, String symbol, boolean isWhite) {
         this.name = name;

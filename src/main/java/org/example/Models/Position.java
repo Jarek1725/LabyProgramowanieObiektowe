@@ -1,9 +1,22 @@
 package org.example.Models;
 
-public class Position{
+import java.util.HashMap;
+
+public class Position {
     private int x;
     private int y;
     private Chessman chessman;
+
+    private static final HashMap<Integer, String> xPositionDict = new HashMap<Integer, String>() {{
+        put(0, "A");
+        put(1, "B");
+        put(2, "C");
+        put(3, "D");
+        put(4, "E");
+        put(5, "F");
+        put(6, "G");
+        put(7, "H");
+    }};
 
     public Position(int x, int y, Chessman chessman) {
         this.x = x;
@@ -33,5 +46,10 @@ public class Position{
 
     public void setChessman(Chessman chessman) {
         this.chessman = chessman;
+    }
+
+    @Override
+    public String toString() {
+        return xPositionDict.get(y) + (x+1);
     }
 }

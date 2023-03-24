@@ -134,13 +134,18 @@ public class Board {
             }
         }
 
-        positions[0][4 ] = new Position(0, 4, new King(true));
+        positions[0][4] = new Position(0, 4, new King(true));
         positions[7][3] = new Position(7, 3, new King(false));
 
         positions[0][0] = new Position(0, 0, new Rook(true));
         positions[0][7] = new Position(0, 7, new Rook(true));
         positions[7][0] = new Position(7, 0, new Rook(false));
         positions[7][7] = new Position(7, 7, new Rook(false));
+
+        positions[0][3] = new Position(0, 3, new Queen(true));
+        positions[7][4] = new Position(7, 4, new Queen(false));
+
+        positions[4][4] = new Position(4, 4, new Queen(false));
     }
 
     public void drawBoard(List<String> additionalInformation) {

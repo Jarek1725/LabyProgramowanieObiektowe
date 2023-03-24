@@ -1,17 +1,17 @@
 package org.example.Models;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Rook extends Chessman {
-    public Rook(boolean isWhite) {
-        super("Rook", isWhite ? "\u265C" : "\u2656", isWhite);
+public class Queen extends Chessman{
+    public Queen(boolean isWhite) {
+        super("Queen", isWhite ? "\u265b" : "\u2655", isWhite);
     }
 
     @Override
     public boolean canMove(Position from, Position to) {
-        return CommonServices.moveHorizontalOrVertical(from, to) && CommonServices.isPositionEmptyOrEnemy(from, to);
+        return (CommonServices.moveHorizontalOrVertical(from, to) || CommonServices.moveAcross(from, to))
+        && CommonServices.isPositionEmptyOrEnemy(from, to);
     }
 
     @Override
@@ -22,5 +22,4 @@ public class Rook extends Chessman {
                 .map(Position::toString)
                 .toList();
     }
-
 }

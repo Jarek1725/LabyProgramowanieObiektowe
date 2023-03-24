@@ -23,9 +23,7 @@ public class Pawn extends Chessman {
                     return true;
                 } else if(to.getX() - from.getX() == 1 && from.getY() == to.getY() && to.getChessman() == null){
                     return true;
-                } else if (to.getChessman() != null && !to.getChessman().isWhite() && from.getX() == to.getX() - 1 && (from.getY() == to.getY() - 1 || from.getY() == to.getY() + 1)) {
-                    return true;
-                }
+                } else return to.getChessman() != null && !to.getChessman().isWhite() && from.getX() == to.getX() - 1 && (from.getY() == to.getY() - 1 || from.getY() == to.getY() + 1);
             }
         }
         return false;

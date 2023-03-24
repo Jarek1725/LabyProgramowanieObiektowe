@@ -1,5 +1,7 @@
 package org.example.Models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Rook extends Chessman {
@@ -9,12 +11,17 @@ public class Rook extends Chessman {
 
     @Override
     public boolean canMove(Position from, Position to) {
-        return false;
+        return (from.getY() == to.getY() || from.getX() == to.getX()) &&
+                CommonServices.isPositionEmptyOrEnemy(from, to);
     }
 
     @Override
     public List<String> getAvailableMoves(Position from, Board board) {
-        return null;
+        return Arrays.stream(board.getPositions())
+                .flatMap(Arrays::stream)
+                .filter(to -> canMove(from, to) && !board.isChessmanBetweenPositions(from, to))
+                .map(Position::toString)
+                .toList();
     }
 
 }

@@ -149,6 +149,11 @@ public class Board {
         positions[0][6] = new Position(0, 6, new Knight(true));
         positions[7][6] = new Position(7, 6, new Knight(false));
         positions[7][1] = new Position(7, 1, new Knight(false));
+
+        positions[0][2] = new Position(0, 2, new Bishop(true));
+        positions[0][5] = new Position(0, 5, new Bishop(true));
+        positions[7][5] = new Position(7, 5, new Bishop(false));
+        positions[7][2] = new Position(7, 2, new Bishop(false));
     }
 
     public void drawBoard(List<String> additionalInformation) {

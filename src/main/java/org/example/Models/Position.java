@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Position {
     private int x;
     private int y;
-    private Chessman chessman;
+    private ChessmanAdapter chessmanAdapter;
 
     private static final HashMap<Integer, String> xPositionDict = new HashMap<Integer, String>() {{
         put(0, "A");
@@ -18,10 +18,10 @@ public class Position {
         put(7, "H");
     }};
 
-    public Position(int x, int y, Chessman chessman) {
+    public Position(int x, int y, ChessmanAdapter chessmanAdapter) {
         this.x = x;
         this.y = y;
-        this.chessman = chessman;
+        this.chessmanAdapter = chessmanAdapter;
     }
 
     public int getX() {
@@ -40,12 +40,12 @@ public class Position {
         this.y = y;
     }
 
-    public Chessman getChessman() {
-        return chessman;
+    public ChessmanAdapter getChessman() {
+        return chessmanAdapter;
     }
 
-    public void setChessman(Chessman chessman) {
-        this.chessman = chessman;
+    public void setChessman(ChessmanAdapter chessmanAdapter) {
+        this.chessmanAdapter = chessmanAdapter;
     }
 
     @Override

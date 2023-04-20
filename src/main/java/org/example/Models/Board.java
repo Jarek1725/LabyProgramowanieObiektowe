@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Board {
     private final Position[][] positions = new Position[8][8];
-    private boolean isWhiteTurn = false;
+    private boolean isWhiteTurn = true;
     private boolean isEnd = false;
     private final Scanner scanner = new Scanner(System.in);
 
@@ -52,22 +52,21 @@ public class Board {
                 }
             }
         }
+
         if (Math.abs(x1 - x2) == Math.abs(y1 - y2)) {
-            int xMin = Math.min(x1, x2);
-            int xMax = Math.max(x1, x2);
-            int yMin = Math.min(y1, y2);
-            int yMax = Math.max(y1, y2);
-            int x = xMin + 1;
-            int y = yMin + 1;
-            while (x < xMax - 1 && y < yMax - 1) {
+            int xDirection = (x2 > x1) ? 1 : -1;
+            int yDirection = (y2 > y1) ? 1 : -1;
+            int x = x1 + xDirection;
+            int y = y1 + yDirection;
+
+            while (x >= 0 && x < positions.length && y >= 0 && y < positions[x].length && x != x2 && y != y2) {
                 if (positions[x][y].getChessman() != null) {
                     return true;
                 }
-                x++;
-                y++;
+                x += xDirection;
+                y += yDirection;
             }
         }
-
         return false;
     }
 
@@ -127,9 +126,9 @@ public class Board {
             for (int j = 0; j < 8; j++) {
                 if (i == 1) {
                     positions[i][j] = new Position(i, j, new Pawn(true));
-                } else if (i == 6)
+                } else if (i == 6) {
                     positions[i][j] = new Position(i, j, new Pawn(false));
-                else
+                } else
                     positions[i][j] = new Position(i, j, null);
             }
         }

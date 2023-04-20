@@ -2,16 +2,12 @@ package org.example.Models;
 
 import java.util.List;
 
-public abstract class Chessman {
+public abstract class ChessmanAdapter implements ChessmanFunctions{
     private final String name;
     private final String symbol;
     private final boolean isWhite;
 
-    public abstract boolean canMove(Position from, Position to);
-
-    public abstract List<String> getAvailableMoves(Position from, Board board);
-
-    public Chessman(String name, String symbol, boolean isWhite) {
+    public ChessmanAdapter(String name, String symbol, boolean isWhite) {
         this.name = name;
         this.symbol = symbol;
         this.isWhite = isWhite;

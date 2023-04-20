@@ -3,7 +3,7 @@ package org.example.Models;
 import java.util.Arrays;
 import java.util.List;
 
-public class Knight extends Chessman {
+public class Knight extends ChessmanAdapter {
     public Knight(boolean isWhite) {
         super("Knight", isWhite ? "\u265e" : "\u2658", isWhite);
     }

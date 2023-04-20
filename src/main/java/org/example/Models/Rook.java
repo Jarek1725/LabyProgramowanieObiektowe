@@ -1,10 +1,9 @@
 package org.example.Models;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Rook extends Chessman {
+public class Rook extends ChessmanAdapter {
     public Rook(boolean isWhite) {
         super("Rook", isWhite ? "\u265C" : "\u2656", isWhite);
     }

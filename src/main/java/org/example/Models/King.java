@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class King extends Chessman {
+public class King extends ChessmanAdapter {
     public King(boolean isWhite) {
         super("King", isWhite ? "\u265A" : "\u2654", isWhite);
     }

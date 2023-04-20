@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Pawn extends Chessman {
+public class Pawn extends ChessmanAdapter {
     public Pawn(boolean isWhite) {
         super("Pawn", isWhite ? "\u265F" : "\u2659", isWhite);
     }

@@ -1,5 +1,6 @@
 package org.example.Models;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,12 +30,36 @@ public class Pawn extends ChessmanAdapter {
         return false;
     }
 
+    private boolean canEnPassantCapture(Position from, Position to, Board board) {
+        Position enPassantTarget = board.getEnPassantTarget();
+        if (enPassantTarget == null) {
+            return false;
+        }
+
+        int dx = Math.abs(from.getY() - to.getY());
+        int dy = to.getX() - from.getX();
+        int direction = (isWhite()) ? 1 : -1;
+
+        return dx == 1 && dy == direction && enPassantTarget.equals(to);
+    }
+
     @Override
     public List<String> getAvailableMoves(Position from, Board board) {
-        return Arrays.stream(board.getPositions())
+        List<String> standardMoves = Arrays.stream(board.getPositions())
                 .flatMap(Arrays::stream)
                 .filter(to -> canMove(from, to) && !board.isChessmanBetweenPositions(from, to))
                 .map(Position::toString)
-                .collect(Collectors.toList());
-    }
-}
+                .toList();
+
+        List<String> enPassantCaptureMoves = Arrays.stream(board.getPositions())
+                .flatMap(Arrays::stream)
+                .filter(to -> canEnPassantCapture(from, to, board))
+                .map(Position::toString)
+                .toList();
+
+        List<String> allMoves = new ArrayList<>();
+        allMoves.addAll(standardMoves);
+        allMoves.addAll(enPassantCaptureMoves);
+
+        return allMoves;
+    }}

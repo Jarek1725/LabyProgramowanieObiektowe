@@ -7,8 +7,30 @@ public class Board {
     private boolean isWhiteTurn = true;
     private boolean isEnd = false;
     private final Scanner scanner = new Scanner(System.in);
+    private Position enPassantTarget;
+
 
     public void makeMove(Position from, Position to) {
+        if (getEnPassantTarget() != null) {
+            if (to.getX() == getEnPassantTarget().getX() && to.getY() == getEnPassantTarget().getY()) {
+                if (from.getChessman().isWhite()) {
+                    positions[getEnPassantTarget().getX() - 1][getEnPassantTarget().getY()].setChessman(null);
+                } else {
+                    positions[getEnPassantTarget().getX() + 1][getEnPassantTarget().getY()].setChessman(null);
+                }
+            }
+        }
+        if (from.getChessman() instanceof Pawn) {
+            if (from.getX() == 1 && to.getX() == 3) {
+                enPassantTarget = positions[from.getX() + 1][from.getY()];
+            } else if (from.getX() == 6 && to.getX() == 4) {
+                enPassantTarget = positions[from.getX() - 1][from.getY()];
+            } else {
+                enPassantTarget = null;
+            }
+        } else {
+            enPassantTarget = null;
+        }
         to.setChessman(from.getChessman());
         from.setChessman(null);
         isWhiteTurn = !isWhiteTurn;
@@ -185,5 +207,13 @@ public class Board {
 
     public Position[][] getPositions() {
         return positions;
+    }
+
+    public Position getEnPassantTarget() {
+        return enPassantTarget;
+    }
+
+    public void setEnPassantTarget(Position enPassantTarget) {
+        this.enPassantTarget = enPassantTarget;
     }
 }

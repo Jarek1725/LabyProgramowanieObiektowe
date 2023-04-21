@@ -9,6 +9,8 @@ public class King extends ChessmanAdapter {
         super("King", isWhite ? "\u265A" : "\u2654", isWhite);
     }
 
+    private boolean hasMoved = false;
+
     @Override
     public boolean canMove(Position from, Position to) {
         if ((Math.abs(to.getX() - from.getX()) <= 1) && (Math.abs(to.getY() - from.getY()) <= 1)) {
@@ -33,5 +35,12 @@ public class King extends ChessmanAdapter {
         return result;
     }
 
+    public boolean isHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
 }
 

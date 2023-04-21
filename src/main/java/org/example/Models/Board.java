@@ -8,7 +8,24 @@ public class Board {
     private boolean isEnd = false;
     private final Scanner scanner = new Scanner(System.in);
     private Position enPassantTarget;
+    private boolean whiteKingMoves;
+    private boolean blackKingMoves;
 
+    public boolean isWhiteKingMoves() {
+        return whiteKingMoves;
+    }
+
+    public void setWhiteKingMoves(boolean whiteKingMoves) {
+        this.whiteKingMoves = whiteKingMoves;
+    }
+
+    public boolean isBlackKingMoves() {
+        return blackKingMoves;
+    }
+
+    public void setBlackKingMoves(boolean blackKingMoves) {
+        this.blackKingMoves = blackKingMoves;
+    }
 
     public void makeMove(Position from, Position to) {
         if (getEnPassantTarget() != null) {
@@ -31,8 +48,33 @@ public class Board {
         } else {
             enPassantTarget = null;
         }
+
+        if (from.getChessman() instanceof King || from.getChessman() instanceof Rook) {
+            if(from.getChessman() instanceof King){
+                ((King) from.getChessman()).setHasMoved(true);
+                if(from.getChessman().isWhite()){
+                    whiteKingMoves = true;
+                } else {
+                    blackKingMoves = true;
+                }
+            }else{
+                ((Rook) from.getChessman()).setHasMoved(true);
+            }
+        }
+
+
         to.setChessman(from.getChessman());
         from.setChessman(null);
+
+        if(to.getChessman().equals(positions[0][4].getChessman())){
+            from.setChessman(new King(true));
+            setWhiteKingMoves(true);
+        }
+        if(to.getChessman().equals(positions[7][3].getChessman())){
+            from.setChessman(new King(false));
+            setBlackKingMoves(true);
+        }
+
         isWhiteTurn = !isWhiteTurn;
         drawBoard(Collections.emptyList());
     }
@@ -49,6 +91,14 @@ public class Board {
             }
         }
     }
+
+    public boolean getAvailableMovesForPosition(List<Position> tos) {
+        return Arrays.stream(positions)
+                .flatMap(Arrays::stream)
+                .filter(position -> position.getChessman() != null && isWhiteTurn != position.getChessman().isWhite())
+                .anyMatch(e -> tos.stream().anyMatch(toss -> getAvailableMoves(e).contains(toss.toString())));
+    }
+
 
     public boolean isChessmanBetweenPositions(Position from, Position to) {
         int x1 = from.getX();
@@ -94,6 +144,15 @@ public class Board {
 
     private void operationsOnSelectedChessman(Position positionStart) {
         List<String> availableMoves = positionStart.getChessman().getAvailableMoves(positionStart, this);
+        if(positionStart.getChessman() instanceof Rook){
+            if(((Rook) positionStart.getChessman()).isCastlingMovePossible(positionStart, this)){
+                if(isWhiteTurn){
+                    availableMoves.add(positions[0][4].toString());
+                }else{
+                    availableMoves.add(positions[7][3].toString());
+                }
+            }
+        }
         if (availableMoves.isEmpty()) {
             drawBoard(List.of("No available moves"));
         } else {
@@ -163,18 +222,18 @@ public class Board {
         positions[7][0] = new Position(7, 0, new Rook(false));
         positions[7][7] = new Position(7, 7, new Rook(false));
 
-        positions[0][3] = new Position(0, 3, new Queen(true));
-        positions[7][4] = new Position(7, 4, new Queen(false));
+//        positions[0][3] = new Position(0, 3, new Queen(true));
+//        positions[7][4] = new Position(7, 4, new Queen(false));
 
-        positions[0][1] = new Position(0, 1, new Knight(true));
-        positions[0][6] = new Position(0, 6, new Knight(true));
-        positions[7][6] = new Position(7, 6, new Knight(false));
-        positions[7][1] = new Position(7, 1, new Knight(false));
+//        positions[0][1] = new Position(0, 1, new Knight(true));
+//        positions[0][6] = new Position(0, 6, new Knight(true));
+//        positions[7][6] = new Position(7, 6, new Knight(false));
+//        positions[7][1] = new Position(7, 1, new Knight(false));
 
-        positions[0][2] = new Position(0, 2, new Bishop(true));
-        positions[0][5] = new Position(0, 5, new Bishop(true));
-        positions[7][5] = new Position(7, 5, new Bishop(false));
-        positions[7][2] = new Position(7, 2, new Bishop(false));
+//        positions[0][2] = new Position(0, 2, new Bishop(true));
+//        positions[0][5] = new Position(0, 5, new Bishop(true));
+//        positions[7][5] = new Position(7, 5, new Bishop(false));
+//        positions[7][2] = new Position(7, 2, new Bishop(false));
     }
 
     public void drawBoard(List<String> additionalInformation) {

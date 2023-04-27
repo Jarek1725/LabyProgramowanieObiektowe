@@ -66,17 +66,25 @@ public class Board {
         to.setChessman(from.getChessman());
         from.setChessman(null);
 
-        if(to.getChessman().equals(positions[0][4].getChessman())){
-            from.setChessman(new King(true));
-            setWhiteKingMoves(true);
-        }
-        if(to.getChessman().equals(positions[7][3].getChessman())){
-            from.setChessman(new King(false));
-            setBlackKingMoves(true);
-        }
+        createKingIfCastled(from, to);
 
         isWhiteTurn = !isWhiteTurn;
         drawBoard(Collections.emptyList());
+    }
+
+    private void createKingIfCastled(Position from, Position to) {
+        if(to.getChessman().equals(positions[0][4].getChessman())){
+            if(!whiteKingMoves){
+                from.setChessman(new King(true));
+            }
+            setWhiteKingMoves(true);
+        }
+        if(to.getChessman().equals(positions[7][3].getChessman())){
+            if(!blackKingMoves){
+                from.setChessman(new King(false));
+            }
+            setBlackKingMoves(true);
+        }
     }
 
     public void startGame() {

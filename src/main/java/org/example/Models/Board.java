@@ -68,6 +68,8 @@ public class Board {
 
         createKingIfCastled(from, to);
 
+        upgradePawn(to);
+
         isWhiteTurn = !isWhiteTurn;
         drawBoard(Collections.emptyList());
     }
@@ -112,6 +114,42 @@ public class Board {
             }
         }
     }
+
+    private void upgradePawn(Position position) {
+        ChessmanAdapter chessman = position.getChessman();
+        int x = position.getX();
+
+        if (!(chessman instanceof Pawn)) {
+            return;
+        }
+
+        if (chessman.isWhite() && x == 7 || !chessman.isWhite() && x == 0) {
+            System.out.print("Choose chessman to upgrade: (Queen | Rook | Bishop | Knight) ");
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "Queen":
+                    chessman = new Queen(chessman.isWhite());
+                    break;
+                case "Rook":
+                    chessman = new Rook(chessman.isWhite());
+                    break;
+                case "Bishop":
+                    chessman = new Bishop(chessman.isWhite());
+                    break;
+                case "Knight":
+                    chessman = new Knight(chessman.isWhite());
+                    break;
+                default:
+                    System.out.println("Invalid chessman");
+                    upgradePawn(position);
+                    return;
+            }
+
+            position.setChessman(chessman);
+        }
+    }
+
 
     public boolean canOpponentStandOnThisPosition(List<Position> tos) {
         return Arrays.stream(positions)

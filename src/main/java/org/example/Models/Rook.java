@@ -36,7 +36,7 @@ public class Rook extends ChessmanAdapter {
             if (!board.isWhiteKingMoves()) {
                 if (from.getY() == 0) {
                     if (!board.isChessmanBetweenPositions(from, board.getPositions()[0][4])) {
-                        if(!board.getAvailableMovesForPosition(
+                        if(!board.canOpponentStandOnThisPosition(
                                 List.of(
                                 board.getPositions()[0][2],
                                 board.getPositions()[0][3],
@@ -47,7 +47,7 @@ public class Rook extends ChessmanAdapter {
                     }
                 } else{
                     if(!board.isChessmanBetweenPositions(from, board.getPositions()[0][4])){
-                        if(!board.getAvailableMovesForPosition(
+                        if(!board.canOpponentStandOnThisPosition(
                                 List.of(
                                         board.getPositions()[0][5],
                                         board.getPositions()[0][6]
@@ -61,7 +61,7 @@ public class Rook extends ChessmanAdapter {
                 if(!board.isBlackKingMoves()){
                     if (from.getY() == 0) {
                         if (!board.isChessmanBetweenPositions(from, board.getPositions()[7][3])) {
-                            if(!board.getAvailableMovesForPosition(
+                            if(!board.canOpponentStandOnThisPosition(
                                     List.of(
                                             board.getPositions()[7][2],
                                             board.getPositions()[7][3],
@@ -72,7 +72,7 @@ public class Rook extends ChessmanAdapter {
                         }
                     } else{
                         if(!board.isChessmanBetweenPositions(from, board.getPositions()[7][3])){
-                            if(!board.getAvailableMovesForPosition(
+                            if(!board.canOpponentStandOnThisPosition(
                                     List.of(
                                             board.getPositions()[7][5],
                                             board.getPositions()[7][6]

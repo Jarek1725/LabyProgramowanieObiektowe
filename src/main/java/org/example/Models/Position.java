@@ -18,6 +18,9 @@ public class Position {
         put(7, "H");
     }};
 
+    public Position() {
+    }
+
     public Position(int x, int y, ChessmanAdapter chessmanAdapter) {
         this.x = x;
         this.y = y;

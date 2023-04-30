@@ -1,10 +1,15 @@
 package org.example.Models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class Queen extends ChessmanAdapter {
-    public Queen(boolean isWhite) {
+
+    @JsonCreator
+    public Queen(@JsonProperty("white")boolean isWhite) {
         super("Queen", isWhite ? "\u265b" : "\u2655", isWhite);
     }
 
@@ -22,4 +27,5 @@ public class Queen extends ChessmanAdapter {
                 .map(Position::toString)
                 .toList();
     }
+
 }

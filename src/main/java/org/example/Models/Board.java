@@ -90,7 +90,7 @@ public class Board {
     }
 
     public void startGame() {
-//        drawBoard(Collections.emptyList());
+        drawBoard(Collections.emptyList());
         Position positionStart;
         while (!isEnd) {
             Position kingPosition = Arrays.stream(positions)
@@ -218,7 +218,7 @@ public class Board {
         return false;
     }
 
-    public void operationsOnSelectedChessman(Position positionStart) {
+    private void operationsOnSelectedChessman(Position positionStart) {
         List<String> availableMoves = positionStart.getChessman().getAvailableMoves(positionStart, this);
         if (positionStart.getChessman() instanceof Rook) {
             if (((Rook) positionStart.getChessman()).isCastlingMovePossible(positionStart, this)) {
@@ -241,30 +241,6 @@ public class Board {
         System.out.print("Select chessman to move, for example 'A2': ");
         String positionStartCoords = scanner.nextLine();
         return isSelectedChessmanValid(positionStartCoords) ? getChessmanAtPosition(positionStartCoords) : null;
-    }
-
-    public List<String> userSelectedChessman(String position){
-        Position position1 = isSelectedChessmanValid(position) ? getChessmanAtPosition(position) : null;
-        List<String> additionalInformation = new ArrayList<>();
-        if(position1 != null) {
-            List<String> availableMoves = position1.getChessman().getAvailableMoves(position1, this);
-            if (position1.getChessman() instanceof Rook) {
-                if (((Rook) position1.getChessman()).isCastlingMovePossible(position1, this)) {
-                    if (isWhiteTurn) {
-                        availableMoves.add(positions[0][4].toString());
-                    } else {
-                        availableMoves.add(positions[7][3].toString());
-                    }
-                }
-            }
-            if (availableMoves.isEmpty()) {
-                drawBoard(List.of("No available moves"));
-            } else {
-                additionalInformation = List.of("Available moves: " + availableMoves.stream().reduce((s, s2) -> s + ", " + s2).get());
-//                selectPositionEnd(availableMoves, position1);
-            }
-        }
-        return additionalInformation;
     }
 
     private boolean isSelectedChessmanValid(String positionStartCoords) {
@@ -375,22 +351,4 @@ public class Board {
     public void setEnPassantTarget(Position enPassantTarget) {
         this.enPassantTarget = enPassantTarget;
     }
-
-
-    public boolean isWhiteTurn() {
-        return isWhiteTurn;
-    }
-
-    public void setWhiteTurn(boolean whiteTurn) {
-        isWhiteTurn = whiteTurn;
-    }
-
-    public void setEnd(boolean end) {
-        isEnd = end;
-    }
-
-    public Scanner getScanner() {
-        return scanner;
-    }
-
 }

@@ -1,12 +1,17 @@
 package org.example.Models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Pawn extends ChessmanAdapter {
-    public Pawn(boolean isWhite) {
+
+    @JsonCreator
+    public Pawn(@JsonProperty("white")boolean isWhite) {
         super("Pawn", isWhite ? "\u265F" : "\u2659", isWhite);
     }
 
@@ -62,4 +67,6 @@ public class Pawn extends ChessmanAdapter {
         allMoves.addAll(enPassantCaptureMoves);
 
         return allMoves;
-    }}
+    }
+
+}

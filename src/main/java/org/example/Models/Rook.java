@@ -1,11 +1,17 @@
 package org.example.Models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Rook extends ChessmanAdapter {
-    public Rook(boolean isWhite) {
+
+    @JsonCreator
+    public Rook(@JsonProperty("white")boolean isWhite) {
         super("Rook", isWhite ? "\u265C" : "\u2656", isWhite);
     }
 
@@ -14,6 +20,7 @@ public class Rook extends ChessmanAdapter {
         return CommonServices.moveHorizontalOrVertical(from, to) && CommonServices.isPositionEmptyOrEnemy(from, to);
     }
 
+    @JsonIgnore
     private boolean hasMoved = false;
 
     @Override
@@ -96,4 +103,5 @@ public class Rook extends ChessmanAdapter {
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
+
 }

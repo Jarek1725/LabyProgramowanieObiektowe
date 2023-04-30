@@ -1,12 +1,13 @@
 package org.example;
 
-import org.example.Models.Board;
-
-import java.util.Collections;
+import java.net.InetSocketAddress;
 
 public class Main {
-    public static void main(String[] args)  {
-        Board board = new Board();
-        board.startGame();
+    public static void main(String[] args) {
+        int port = 8887;
+        WSSServer server = new WSSServer(new InetSocketAddress(port));
+        server.start();
+        System.out.println("Server started on port: " + port);
     }
+
 }

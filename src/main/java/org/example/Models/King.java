@@ -1,14 +1,21 @@
 package org.example.Models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class King extends ChessmanAdapter {
-    public King(boolean isWhite) {
+    @JsonCreator
+    public King(@JsonProperty("white")boolean isWhite) {
         super("King", isWhite ? "\u265A" : "\u2654", isWhite);
     }
 
+
+    @JsonIgnore
     private boolean hasMoved = false;
 
     @Override
@@ -42,5 +49,6 @@ public class King extends ChessmanAdapter {
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
+
 }
 

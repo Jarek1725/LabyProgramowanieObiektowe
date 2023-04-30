@@ -10,6 +10,7 @@ public class GameInfo {
     private boolean wrongSelection = false;
     private boolean wrongMove = false;
     private boolean gameRunning = false;
+    private boolean selecting = false;
 
 
     public GameInfo(Position[][] positions, List<String> gameInfo, boolean isYourTurn, boolean isEnd) {
@@ -36,6 +37,17 @@ public class GameInfo {
     }
 
     public GameInfo() {
+    }
+
+    public GameInfo(Position[][] positions, List<String> gameInfo, boolean isYourTurn, boolean isEnd, boolean wrongSelection, boolean wrongMove, boolean gameRunning, boolean selecting) {
+        this.positions = positions;
+        this.gameInfo = gameInfo;
+        this.isYourTurn = isYourTurn;
+        this.isEnd = isEnd;
+        this.wrongSelection = wrongSelection;
+        this.wrongMove = wrongMove;
+        this.gameRunning = gameRunning;
+        this.selecting = selecting;
     }
 
     public Position[][] getPositions() {
@@ -92,5 +104,13 @@ public class GameInfo {
 
     public void setGameRunning(boolean gameRunning) {
         this.gameRunning = gameRunning;
+    }
+
+    public boolean isSelecting() {
+        return selecting;
+    }
+
+    public void setSelecting(boolean selecting) {
+        this.selecting = selecting;
     }
 }

@@ -10,6 +10,8 @@ public class Board {
     private Position enPassantTarget;
     private boolean whiteKingMoves;
     private boolean blackKingMoves;
+    private List<String> properMoves = new ArrayList<>();
+    private String selectedPosition;
 
     public boolean isWhiteKingMoves() {
         return whiteKingMoves;
@@ -258,10 +260,10 @@ public class Board {
                 }
             }
             if (availableMoves.isEmpty()) {
-                drawBoard(List.of("No available moves"));
+                return Collections.emptyList();
             } else {
                 additionalInformation = List.of("Available moves: " + availableMoves.stream().reduce((s, s2) -> s + ", " + s2).get());
-//                selectPositionEnd(availableMoves, position1);
+                properMoves = availableMoves;
             }
         }
         return additionalInformation;
@@ -393,4 +395,23 @@ public class Board {
         return scanner;
     }
 
+    public List<String> getProperMoves() {
+        return properMoves;
+    }
+
+    public void setProperMoves(List<String> properMoves) {
+        this.properMoves = properMoves;
+    }
+
+    public String getSelectedPosition() {
+        return selectedPosition;
+    }
+
+    public void setSelectedPosition(String selectedPosition) {
+        this.selectedPosition = selectedPosition;
+    }
+
+    public Position stringToPosition(String position) {
+        return getChessmanAtPosition(position);
+    }
 }

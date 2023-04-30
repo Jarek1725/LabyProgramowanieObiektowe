@@ -12,6 +12,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,10 +62,11 @@ public class WSSServer extends WebSocketServer {
                         gameInfo.setPositions(room.getBoard().getPositions());
                         List<String> additionalInfo = new ArrayList<>();
                         additionalInfo.add("Select destination");
-                        if(availableMoves.isEmpty()){
+                        if (availableMoves.isEmpty()) {
                             gameInfo.setWrongSelection(true);
-                        } else{
+                        } else {
                             additionalInfo.addAll(availableMoves);
+                            room.getBoard().setSelectedPosition(selectedChessman);
                         }
                         gameInfo.setGameInfo(additionalInfo);
                         gameInfo.setYourTurn(true);
@@ -75,13 +77,43 @@ public class WSSServer extends WebSocketServer {
                             throw new RuntimeException(e);
                         }
                         room.getWhitePlayer().send(jsonString);
-                        gameInfo.setYourTurn(false);
-                        try {
-                            jsonString = objectMapper.writeValueAsString(gameInfo);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
+                    }
+                }
+            }
+        } else if (message.startsWith("selectedPositionToMove:")) {
+            String selectedPosition = message.split(":")[1];
+            Room room = this.getRoomViaPlayer(conn);
+            if (room != null) {
+                if (room.getBoard().isWhiteTurn()) {
+                    if (conn.equals(room.getWhitePlayer())) {
+                        if (room.getBoard().getProperMoves().contains(selectedPosition)) {
+
+                            Position chessmanAtPosition = room.getBoard().getChessmanAtPosition(room.getBoard().getSelectedPosition());
+                            room.getBoard().makeMove(chessmanAtPosition, room.getBoard().getChessmanAtPosition(selectedPosition));
+                            GameInfo gameInfo = new GameInfo();
+                            gameInfo.setPositions(room.getBoard().getPositions());
+                            List<String> additionalInfo = new ArrayList<>();
+                            additionalInfo.add("Waiting for opponent");
+                            gameInfo.setGameInfo(additionalInfo);
+                            gameInfo.setYourTurn(false);
+                            String jsonString = null;
+                            try {
+                                jsonString = objectMapper.writeValueAsString(gameInfo);
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                            room.getWhitePlayer().send(jsonString);
+
+                            gameInfo.setYourTurn(true);
+                            gameInfo.setSelecting(true);
+                            jsonString = null;
+                            try {
+                                jsonString = objectMapper.writeValueAsString(gameInfo);
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                            room.getBlackPlayer().send(jsonString);
                         }
-                        room.getBlackPlayer().send(jsonString);
                     }
                 }
             }
@@ -124,6 +156,7 @@ public class WSSServer extends WebSocketServer {
             String jsonString = objectMapper.writeValueAsString(gameInfo);
             room.getBlackPlayer().send(jsonString);
             gameInfo.setYourTurn(true);
+            gameInfo.setSelecting(true);
             jsonString = objectMapper.writeValueAsString(gameInfo);
             room.getWhitePlayer().send(jsonString);
         }

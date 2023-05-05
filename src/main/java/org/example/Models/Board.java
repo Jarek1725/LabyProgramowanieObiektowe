@@ -263,6 +263,7 @@ public class Board {
                 return Collections.emptyList();
             } else {
                 additionalInformation = List.of("Available moves: " + availableMoves.stream().reduce((s, s2) -> s + ", " + s2).get());
+                setProperMoves(availableMoves);
                 properMoves = availableMoves;
             }
         }

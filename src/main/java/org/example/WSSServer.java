@@ -75,7 +75,6 @@ public class WSSServer extends WebSocketServer {
             List<String> availableMoves = room.getBoard().userSelectedChessman(selectedChessman);
             GameInfo gameInfo = createGameInfo(room, availableMoves);
             room.getBoard().setSelectedPosition(selectedChessman);
-            room.getBoard().setProperMoves(availableMoves);
             sendGameInfoToCurrentPlayer(conn, room, gameInfo);
         }
     }
@@ -84,6 +83,7 @@ public class WSSServer extends WebSocketServer {
         String selectedPosition = message.split(":")[1];
         Room room = getRoomViaPlayer(conn);
         if (room != null && isPlayerInRoom(conn, room) && room.getBoard().getProperMoves().contains(selectedPosition)) {
+            System.out.println("TEST123");
             executeMoveAndUpdatePlayers(conn, room, selectedPosition);
         }
     }

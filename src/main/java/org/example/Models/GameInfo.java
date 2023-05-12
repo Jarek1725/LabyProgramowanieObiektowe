@@ -12,6 +12,7 @@ public class GameInfo {
     private boolean gameRunning = false;
     private boolean selectingPositionToMove = false;
     private boolean opponentLeft = false;
+    private boolean upgradePawn = false;
 
 
     public GameInfo(Position[][] positions, List<String> gameInfo, boolean isYourTurn, boolean isEnd) {
@@ -121,5 +122,13 @@ public class GameInfo {
 
     public void setOpponentLeft(boolean opponentLeft) {
         this.opponentLeft = opponentLeft;
+    }
+
+    public boolean isUpgradePawn() {
+        return upgradePawn;
+    }
+
+    public void setUpgradePawn(boolean upgradePawn) {
+        this.upgradePawn = upgradePawn;
     }
 }

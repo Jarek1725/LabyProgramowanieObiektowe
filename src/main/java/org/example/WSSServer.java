@@ -2,9 +2,7 @@ package org.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.Models.Board;
-import org.example.Models.GameInfo;
-import org.example.Models.Position;
+import org.example.Models.*;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -45,7 +43,47 @@ public class WSSServer extends WebSocketServer {
             handleSelectedChessmanMessage(conn, message);
         } else if (message.startsWith("selectedPositionToMove:")) {
             handleSelectedPositionToMoveMessage(conn, message);
+        } else if (message.startsWith("upgradePawn:")) {
+            handleUpgradePawn(conn, message);
         }
+    }
+
+    private void handleUpgradePawn(WebSocket conn, String message) {
+        Room room = getRoomViaPlayer(conn);
+        String pawnUpgradedTo = message.split(":")[1];
+        ChessmanAdapter chessman = room.getBoard().getChessmanAtPosition(room.getBoard().getLastMovedTo()).getChessman();
+        switch (pawnUpgradedTo) {
+            case "Queen":
+                chessman = new Queen(chessman.isWhite());
+
+                break;
+            case "Rook":
+                chessman = new Rook(chessman.isWhite());
+                break;
+            case "Bishop":
+                chessman = new Bishop(chessman.isWhite());
+                break;
+            case "Knight":
+                chessman = new Knight(chessman.isWhite());
+                break;
+            default:
+                System.out.println("Invalid chessman");
+                sendMessageToUpgradePawn(conn, room);
+                return;
+        }
+
+        room.getBoard().getChessmanAtPosition(room.getBoard().getLastMovedTo()).setChessman(chessman);
+        room.getBoard().setWhiteTurn(!room.getBoard().isWhiteTurn());
+
+        GameInfo gameInfoForCurrentPlayer = createGameInfoForOpponent(room);
+        String action = room.getBoard().getSelectedPosition() + " -> " + room.getBoard().getLastMovedTo();
+        gameInfoForCurrentPlayer.getGameInfo().add(action);
+        gameInfoForCurrentPlayer.getGameInfo().add("Upgraded pawn to: " + pawnUpgradedTo);
+        sendGameInfoToCurrentPlayer(conn, room, gameInfoForCurrentPlayer);
+
+        GameInfo gameInfoForOpponent = createGameInfoForCurrentPlayer(room);
+        gameInfoForCurrentPlayer.getGameInfo().add(action);
+        sendGameInfoToOpponent(conn, room, gameInfoForOpponent);
     }
 
     @Override
@@ -82,19 +120,50 @@ public class WSSServer extends WebSocketServer {
     private void handleSelectedPositionToMoveMessage(WebSocket conn, String message) {
         String selectedPosition = message.split(":")[1];
         Room room = getRoomViaPlayer(conn);
-        if (room != null && isPlayerInRoom(conn, room) && room.getBoard().getProperMoves().contains(selectedPosition)) {
-            System.out.println("TEST123");
-            executeMoveAndUpdatePlayers(conn, room, selectedPosition);
+        if (room != null && isPlayerInRoom(conn, room)) {
+            if (room.getBoard().getProperMoves().contains(selectedPosition)) {
+                executeMoveAndUpdatePlayers(conn, room, selectedPosition);
+            } else {
+                sendWrongMoveInformation(conn, room);
+            }
         }
+    }
+
+    private void sendWrongMoveInformation(WebSocket conn, Room room) {
+        GameInfo gameInfoForCurrentPlayer = createGameInfoForOpponent(room);
+        gameInfoForCurrentPlayer.setWrongMove(true);
+        gameInfoForCurrentPlayer.setGameInfo(new ArrayList<>());
+        sendGameInfoToCurrentPlayer(conn, room, gameInfoForCurrentPlayer);
+    }
+
+    private void sendMessageToUpgradePawn(WebSocket conn, Room room) {
+        GameInfo gameInfoForCurrentPlayer = createGameInfoForCurrentPlayer(room);
+        gameInfoForCurrentPlayer.setUpgradePawn(true);
+        sendGameInfoToCurrentPlayer(conn, room, gameInfoForCurrentPlayer);
     }
 
     private void executeMoveAndUpdatePlayers(WebSocket conn, Room room, String selectedPosition) {
         Position chessmanAtPosition = room.getBoard().getChessmanAtPosition(room.getBoard().getSelectedPosition());
         room.getBoard().makeMove(chessmanAtPosition, room.getBoard().getChessmanAtPosition(selectedPosition));
 
+        Position position = room.getBoard().getChessmanAtPosition(selectedPosition);
+        room.getBoard().setLastMovedTo(selectedPosition);
+        if (position.getChessman() instanceof Pawn) {
+            if (position.getChessman().isWhite() && position.getX() == 7 || !position.getChessman().isWhite() && position.getX() == 0) {
+                sendMessageToUpgradePawn(conn, room);
+                return;
+            }
+        }
+
+
+        room.getBoard().setWhiteTurn(!room.getBoard().isWhiteTurn());
+
         GameInfo gameInfoForCurrentPlayer = createGameInfoForOpponent(room);
         String action = room.getBoard().getSelectedPosition() + " -> " + selectedPosition;
         gameInfoForCurrentPlayer.getGameInfo().add(action);
+        if(room.getBoard().isCheck()!=null){
+            gameInfoForCurrentPlayer.getGameInfo().add(room.getBoard().isCheck());
+        }
         sendGameInfoToCurrentPlayer(conn, room, gameInfoForCurrentPlayer);
 
         GameInfo gameInfoForOpponent = createGameInfoForCurrentPlayer(room);

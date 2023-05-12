@@ -12,6 +12,7 @@ public class Board {
     private boolean blackKingMoves;
     private List<String> properMoves = new ArrayList<>();
     private String selectedPosition;
+    private String lastMovedTo;
 
     public boolean isWhiteKingMoves() {
         return whiteKingMoves;
@@ -65,30 +66,69 @@ public class Board {
         }
 
 
-        to.setChessman(from.getChessman());
-        from.setChessman(null);
+        boolean kingIfCastled = createKingIfCastled(from, to);
+        if (!kingIfCastled) {
+            to.setChessman(from.getChessman());
+            from.setChessman(null);
+        }
 
-        createKingIfCastled(from, to);
+//        upgradePawn(to);
 
-        upgradePawn(to);
-
-        isWhiteTurn = !isWhiteTurn;
-        drawBoard(Collections.emptyList());
+//        drawBoard(Collections.emptyList());
     }
 
-    private void createKingIfCastled(Position from, Position to) {
-        if (to.getChessman().equals(positions[0][4].getChessman())) {
+    private boolean createKingIfCastled(Position from, Position to) {
+        if (to.getChessman() instanceof King) {
             if (!whiteKingMoves) {
-                from.setChessman(new King(true));
+                if (to.getX() == 0) {
+                    if (from.getY() == 0) {
+                        positions[0][2].setChessman(new King(true));
+                        positions[0][3].setChessman(new Rook(true));
+                    } else {
+                        positions[0][6].setChessman(new King(true));
+                        positions[0][5].setChessman(new Rook(true));
+                    }
+                }
+                from.setChessman(null);
+                to.setChessman(null);
+                setWhiteKingMoves(true);
+                return true;
             }
-            setWhiteKingMoves(true);
         }
-        if (to.getChessman().equals(positions[7][3].getChessman())) {
+        if (to.getChessman() instanceof King) {
             if (!blackKingMoves) {
-                from.setChessman(new King(false));
+                if (to.getX() == 7) {
+                    if (from.getY() == 0) {
+                        positions[7][2].setChessman(new King(false));
+                        positions[7][3].setChessman(new Rook(false));
+                    } else {
+                        positions[7][6].setChessman(new King(false));
+                        positions[7][5].setChessman(new Rook(false));
+                    }
+                }
+                setBlackKingMoves(true);
+                from.setChessman(null);
+                to.setChessman(null);
+                return true;
             }
-            setBlackKingMoves(true);
         }
+        return false;
+    }
+
+    public String isCheck() {
+        Position kingPosition = Arrays.stream(positions)
+                .flatMap(Arrays::stream)
+                .filter(position -> position.getChessman() instanceof King && position.getChessman().isWhite() == isWhiteTurn)
+                .findFirst()
+                .orElse(null);
+        boolean availableMovesForPosition = canOpponentStandOnThisPosition(List.of(kingPosition));
+        boolean canKingMove = !getAvailableMoves(kingPosition).isEmpty();
+        if (availableMovesForPosition && !canKingMove) {
+            return "Checkmate";
+        } else if (availableMovesForPosition) {
+            return "Check";
+        }
+        return null;
     }
 
     public void startGame() {
@@ -227,7 +267,7 @@ public class Board {
                 if (isWhiteTurn) {
                     availableMoves.add(positions[0][4].toString());
                 } else {
-                    availableMoves.add(positions[7][3].toString());
+                    availableMoves.add(positions[7][4].toString());
                 }
             }
         }
@@ -245,17 +285,17 @@ public class Board {
         return isSelectedChessmanValid(positionStartCoords) ? getChessmanAtPosition(positionStartCoords) : null;
     }
 
-    public List<String> userSelectedChessman(String position){
+    public List<String> userSelectedChessman(String position) {
         Position position1 = isSelectedChessmanValid(position) ? getChessmanAtPosition(position) : null;
         List<String> additionalInformation = new ArrayList<>();
-        if(position1 != null) {
+        if (position1 != null) {
             List<String> availableMoves = position1.getChessman().getAvailableMoves(position1, this);
             if (position1.getChessman() instanceof Rook) {
                 if (((Rook) position1.getChessman()).isCastlingMovePossible(position1, this)) {
                     if (isWhiteTurn) {
                         availableMoves.add(positions[0][4].toString());
                     } else {
-                        availableMoves.add(positions[7][3].toString());
+                        availableMoves.add(positions[7][4].toString());
                     }
                 }
             }
@@ -318,7 +358,7 @@ public class Board {
         }
 
         positions[0][4] = new Position(0, 4, new King(true));
-        positions[7][3] = new Position(7, 3, new King(false));
+        positions[7][4] = new Position(7, 4, new King(false));
 
         positions[0][0] = new Position(0, 0, new Rook(true));
         positions[0][7] = new Position(0, 7, new Rook(true));
@@ -326,7 +366,7 @@ public class Board {
         positions[7][7] = new Position(7, 7, new Rook(false));
 
         positions[0][3] = new Position(0, 3, new Queen(true));
-        positions[7][4] = new Position(7, 4, new Queen(false));
+        positions[7][3] = new Position(7, 3, new Queen(false));
 
         positions[0][1] = new Position(0, 1, new Knight(true));
         positions[0][6] = new Position(0, 6, new Knight(true));
@@ -414,5 +454,13 @@ public class Board {
 
     public Position stringToPosition(String position) {
         return getChessmanAtPosition(position);
+    }
+
+    public String getLastMovedTo() {
+        return lastMovedTo;
+    }
+
+    public void setLastMovedTo(String lastMovedTo) {
+        this.lastMovedTo = lastMovedTo;
     }
 }

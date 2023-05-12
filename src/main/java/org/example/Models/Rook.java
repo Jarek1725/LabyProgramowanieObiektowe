@@ -46,8 +46,7 @@ public class Rook extends ChessmanAdapter {
                         if(!board.canOpponentStandOnThisPosition(
                                 List.of(
                                 board.getPositions()[0][2],
-                                board.getPositions()[0][3],
-                                board.getPositions()[0][4])
+                                board.getPositions()[0][3])
                         )){
                             return true;
                         }
@@ -67,18 +66,17 @@ public class Rook extends ChessmanAdapter {
             }} else{
                 if(!board.isBlackKingMoves()){
                     if (from.getY() == 0) {
-                        if (!board.isChessmanBetweenPositions(from, board.getPositions()[7][3])) {
+                        if (!board.isChessmanBetweenPositions(from, board.getPositions()[7][4])) {
                             if(!board.canOpponentStandOnThisPosition(
                                     List.of(
                                             board.getPositions()[7][2],
-                                            board.getPositions()[7][3],
-                                            board.getPositions()[7][4])
+                                            board.getPositions()[7][3])
                             )){
                                 return true;
                             }
                         }
                     } else{
-                        if(!board.isChessmanBetweenPositions(from, board.getPositions()[7][3])){
+                        if(!board.isChessmanBetweenPositions(from, board.getPositions()[7][4])){
                             if(!board.canOpponentStandOnThisPosition(
                                     List.of(
                                             board.getPositions()[7][5],
